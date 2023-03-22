@@ -1,10 +1,14 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import Image from 'next/image'
 import { Box, Icon, Flex } from '@chakra-ui/react'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu'
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa'
 import 'react-horizontal-scrolling-menu/dist/styles.css'
-import { useMediaQuery } from 'react-responsive'
+// import { useMediaQuery } from 'react-responsive'
+import { useMediaPredicate } from 'react-media-hook'
+// import LoadImage from './LoadImage'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css'
 
 const LeftArrow = () => {
 	const { scrollPrev } = useContext(VisibilityContext)
@@ -36,8 +40,11 @@ const RightArrow = () => {
 }
 
 const ImageScrollbar = ({ data }) => {
-	const width500 = useMediaQuery({ query: '(max-width: 500px)' })
-	const width1023 = useMediaQuery({ query: '(max-width: 1023px)' })
+	// 	const width500 = useMediaQuery({ query: '(max-width: 500px)' })
+	// const width1023 = useMediaQuery({ query: '(max-width: 1023px)' })
+
+	const width500 = useMediaPredicate('(max-width: 500px)')
+	const width1023 = useMediaPredicate('(max-width: 1023px)')
 
 	return (
 		<ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
@@ -46,11 +53,12 @@ const ImageScrollbar = ({ data }) => {
 					key={item.id}
 					title={item.id}
 					width={(width500 && 300) || (width1023 && !width500 && 510) || 910}
+					// width='910px'
 					itemID={item.id}
 					overflow='hidden'
 					p='1'
 				>
-					<Image
+					{/* <Image
 						alt='property'
 						placeholder='blur'
 						blurDataURL={item.url}
@@ -59,7 +67,9 @@ const ImageScrollbar = ({ data }) => {
 						width={1000}
 						height={500}
 						style={{ objectFit: 'cover' }}
-					/>
+					/> */}
+					{/* <LoadImage largeImageSrc={item.url} smallImageSrc={item.url} /> */}
+					<LazyLoadImage alt='property' src={item.url} effect='blur' />
 				</Box>
 			))}
 		</ScrollMenu>
